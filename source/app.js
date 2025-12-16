@@ -111,7 +111,7 @@ export default function App() {
 		setReadSpeed("");
 
 		const startTime = Date.now();
-		const CHUNK_SIZE = 10 * 1024 * 1024; // 10MB chunks
+		const CHUNK_SIZE = 10 * 1024 * 1024;
 		let bytesRead = 0;
 
 		return new Promise((resolve, reject) => {
