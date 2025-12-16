@@ -34,8 +34,15 @@ export default function App() {
 		const speedBytesPerSecond = FILE_SIZE_BYTES / (durationMs / 1000);
 		const speedMBps = speedBytesPerSecond / (1024 * 1024);
 
-		setDurationFn(`${durationMs.toFixed(2)} ms`);
+		setDurationFn(formatDuration(durationMs));
 		setSpeedFn(`${speedMBps.toFixed(2)} MB/s`);
+	}
+
+	function formatDuration(durationMs) {
+	    if (durationMs > 1000) {
+	        return `${(durationMs / 1000).toFixed(2)} s`;
+	    }
+	    return `${durationMs.toFixed(0)} ms`;
 	}
 
 	function writeTest() {
@@ -75,7 +82,7 @@ export default function App() {
 				const speedMBps = speedBytesPerSecond / (1024 * 1024);
 				
 				setWriteProgress(bytesWritten / FILE_SIZE_BYTES);
-				setWriteDuration(`${elapsedMs.toFixed(0)} ms`);
+				setWriteDuration(formatDuration(elapsedMs));
 				setWriteSpeed(`${speedMBps.toFixed(2)} MB/s`);
 				
 				if (!writeStream.write(buffer)) {
@@ -124,7 +131,7 @@ export default function App() {
 				const speedMBps = speedBytesPerSecond / (1024 * 1024);
 				
 				setReadProgress(bytesRead / FILE_SIZE_BYTES);
-				setReadDuration(`${elapsedMs.toFixed(0)} ms`);
+				setReadDuration(formatDuration(elapsedMs));
 				setReadSpeed(`${speedMBps.toFixed(2)} MB/s`);
 			});
 
@@ -134,6 +141,13 @@ export default function App() {
 				saveResults(durationMs, setReadDuration, setReadSpeed);
 				setStatus("Read Test: Completed");
 				setIsRunning(false);
+				fs.unlink(TEST_FILE_PATH, (err) => {
+					if (err) {
+						setStatus(`Read Test: Completed (cleanup failed: ${err.message})`);
+					} else {
+						setStatus("Read Test: Completed");
+					}
+				});
 				resolve(bytesRead);
 			});
 		});
