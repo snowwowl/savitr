@@ -34,7 +34,7 @@ Once running:
 - Press Enter to start the benchmark
 - Press Esc to exit
 
-The test file (`test_disk_speed.bin`) is created in the directory where you run the command. Note: the file is NOT removed automatically; delete it manually when you're done.
+The test file (`test_disk_speed.bin`) is created in the directory where you run the command.
 
 ## Requirements
 
