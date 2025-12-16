@@ -8,13 +8,6 @@ const cli = meow(
 	`
 		Usage
 		  $ savitr
-
-		Options
-			--name  Your name
-
-		Examples
-		  $ savitr --name=Jane
-		  Hello, Jane
 	`,
 	{
 		importMeta: import.meta,
