@@ -35,8 +35,8 @@ export default function ProgressBar({ value, width = DEFAULT_WIDTH, color, colou
 
   return (
     <Box>
-      <Text color={usedColor}>
-       {label} {bar} {percent}%
+      <Text>
+        {label} <Text color={usedColor}>{bar}</Text> {percent}%
       </Text>
     </Box>
   );

@@ -1,6 +1,6 @@
 {
 	"name": "savitr",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"license": "MIT",
 	"bin": "dist/cli.js",
 	"type": "module",
