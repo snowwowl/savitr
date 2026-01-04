@@ -5,16 +5,14 @@ import * as fs from 'fs';
 import path from 'path'
 
 
-const FILE_SIZE_GB = 5;
-const FILE_SIZE_BYTES = FILE_SIZE_GB * 1024 * 1024 * 1024; 
 const TEST_FILE_NAME = 'test_disk_speed.bin';
 const TEST_FILE_PATH = process.cwd() + '/' + TEST_FILE_NAME;
 const LATENCY_TEST_SAMPLES = 1000; // Number of random reads for latency test
 
 // Test configurations
 const TEST_CONFIGS = [
-	{ chunkSize: 10 * 1024 * 1024, label: '10 MB' },
-	{ chunkSize: 4 * 1024, label: '4 KB' }
+	{ chunkSize: 10 * 1024 * 1024, label: '10 MB', fileSize: 5 },
+	{ chunkSize: 4 * 1024, label: '4 KB', fileSize: 5 }
 ];
 
 function createRandomBuffer(size) {
@@ -28,6 +26,8 @@ export default function App() {
 
 	const [currentTestIndex, setCurrentTestIndex] = useState(0);
 	const [currentChunkSize, setCurrentChunkSize] = useState(TEST_CONFIGS[0].chunkSize);
+	const [currentFileSize, setCurrentFileSize] = useState(TEST_CONFIGS[0].fileSize);
+	const FILE_SIZE_BYTES = currentFileSize * 1024 * 1024 * 1024;
 	const [writeProgress, setWriteProgress] = useState(0);
 	const [readProgress, setReadProgress] = useState(0);
 	const [latencyProgress, setLatencyProgress] = useState(0);
@@ -202,7 +202,7 @@ export default function App() {
 				const performRead = (index) => {
 					if (index >= LATENCY_TEST_SAMPLES) {
 						// Calculate statistics
-						latencies.sort((a, b) => a - b);
+						latencies.sort((a, b) => a < b ? -1 : a > b ? 1 : 0);
 						const sum = latencies.reduce((acc, val) => acc + val, 0n);
 						const avg = Number(sum) / latencies.length;
 						const min = Number(latencies[0]);
@@ -289,6 +289,7 @@ export default function App() {
 			const config = TEST_CONFIGS[i];
 			setCurrentTestIndex(i);
 			setCurrentChunkSize(config.chunkSize);
+			setCurrentFileSize(config.fileSize);
 			setStatus(`Running test ${i + 1}/${TEST_CONFIGS.length} with chunk size: ${config.label}`);
 			
 			const writeResult = await writeTest(config.chunkSize);
@@ -336,7 +337,7 @@ export default function App() {
 
 			<Box flexDirection='column' paddingTop={2}>
 				<Text>Current dir: {process.cwd()}</Text>
-				<Text>File Size: {FILE_SIZE_GB} GB</Text>
+				<Text>File Size: {currentFileSize} GB</Text>
 				<Text>Current Chunk Size: {formatBytes(currentChunkSize)}</Text>
 				{isRunning && (
 					<Text color="yellow">Test {currentTestIndex + 1}/{TEST_CONFIGS.length}</Text>
