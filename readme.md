@@ -1,7 +1,8 @@
 Savitr
 
 A simple CLI tool for benchmarking disk read/write speeds. It writes a large test file to disk and reads it back, measuring throughput along the way.
-What it does
+
+[Screenshot.png](https://postimg.cc/YhqGNjhs)
 
 Savitr runs two sequential tests:
 
